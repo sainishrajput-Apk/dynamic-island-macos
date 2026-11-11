@@ -389,16 +389,16 @@ struct WheelRows: View, Animatable {
                 if loops || (r >= 0 && r < count) {
                     let y = CGFloat(r) - pos
                     let d = abs(y)
-                    Text(label(((r % count) + count) % count))
+                    let baseText = Text(label(((r % count) + count) % count))
                         .font(.system(size: 21, weight: .semibold, design: .rounded))
                         .monospacedDigit()
-                        .frame(width: width, height: rowH)
-                        .scaleEffect(max(0.7, 1 - 0.10 * d))
-                        .opacity(max(0.10, 1 - 0.36 * d))
-                        .rotation3DEffect(.degrees(Double(y) * -16), axis: (x: 1, y: 0, z: 0), perspective: 0.5)
-                        .offset(y: y * rowH)
-                        .contentShape(Rectangle())
-                        .onTapGesture { onTapRow(r) }
+                    let framedText = baseText.frame(width: width, height: rowH)
+                    let scaledText = framedText.scaleEffect(max(0.7, 1 - 0.10 * d))
+                    let fadedText = scaledText.opacity(max(0.10, 1 - 0.36 * d))
+                    let rotatedText = fadedText.rotation3DEffect(.degrees(Double(y) * -16), axis: (x: 1, y: 0, z: 0), perspective: 0.5)
+                    let offsetText = rotatedText.offset(y: y * rowH)
+                    let shapedText = offsetText.contentShape(Rectangle())
+                    shapedText.onTapGesture { onTapRow(r) }
                 }
             }
         }
